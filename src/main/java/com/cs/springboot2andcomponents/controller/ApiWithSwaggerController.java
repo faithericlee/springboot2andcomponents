@@ -4,10 +4,12 @@ import com.cs.springboot2andcomponents.domain.User;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping(value="/apiwithswagger")
 public class ApiWithSwaggerController {
@@ -21,6 +23,7 @@ public class ApiWithSwaggerController {
         // 处理"/users/"的GET请求，用来获取用户列表
         // 还可以通过@RequestParam从页面中传递参数来进行查询条件或者翻页信息的传递
         List<User> r = new ArrayList<User>(users.values());
+        log.info("get user list");
         return r;
     }
 
