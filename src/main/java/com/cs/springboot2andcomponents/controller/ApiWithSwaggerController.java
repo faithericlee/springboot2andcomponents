@@ -2,6 +2,7 @@ package com.cs.springboot2andcomponents.controller;
 
 import com.cs.springboot2andcomponents.aop.Log;
 import com.cs.springboot2andcomponents.domain.User;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * swagger示例
+ */
+@Api(tags = "swagger接口文档示例")
 @Slf4j
 @RestController
 @RequestMapping(value="/apiwithswagger")

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
- * @author Zheng Jie
- * @date 2018-11-24
+ * 日志aspect整合
  */
 @Component
 @Aspect
@@ -41,7 +40,7 @@ public class LogAspect {
         currentTime.set(System.currentTimeMillis());
         result = joinPoint.proceed();
         showLog(joinPoint);
-        log.info(result.toString());
+        log.info(null!=result?result.toString():"");
         return result;
     }
 
