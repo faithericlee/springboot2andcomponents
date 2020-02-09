@@ -1,5 +1,6 @@
 package com.cs.springboot2andcomponents.controller;
 
+import com.cs.springboot2andcomponents.aop.Log;
 import com.cs.springboot2andcomponents.domain.User;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,6 +28,7 @@ public class ApiWithSwaggerController {
         return r;
     }
 
+    @Log("创建用户")
     @ApiOperation(value="创建用户", notes="根据User对象创建用户")
     @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User")
     @RequestMapping(value="", method=RequestMethod.POST)
