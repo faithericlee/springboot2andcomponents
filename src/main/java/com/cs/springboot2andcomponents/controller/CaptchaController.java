@@ -1,6 +1,5 @@
 package com.cs.springboot2andcomponents.controller;
 
-import cn.hutool.core.lang.UUID;
 import com.cs.springboot2andcomponents.aop.Log;
 import com.cs.springboot2andcomponents.util.RedisUtil;
 import com.wf.captcha.ArithmeticCaptcha;
