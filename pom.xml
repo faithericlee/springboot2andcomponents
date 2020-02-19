@@ -21,6 +21,7 @@
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.62</fastjson.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
+        <jjwt.version>0.10.6</jjwt.version>
     </properties>
 
     <dependencies>
@@ -90,19 +91,35 @@
             <version>1.14</version>
         </dependency>
 
+        <!--jwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+
+        <!-- 验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-core -->
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
+            <artifactId>hutool-all</artifactId>
             <version>5.1.2</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -126,6 +143,17 @@
 
     <build>
         <plugins>
+            <!--编译插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
