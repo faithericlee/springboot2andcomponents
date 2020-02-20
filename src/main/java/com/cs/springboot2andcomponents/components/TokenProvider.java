@@ -56,7 +56,7 @@ public class TokenProvider implements InitializingBean {
 //        header.put("alg", "HS1256"); //可以省略，会根据签名加密算法自动生成，设置不对也没关系
         header.put("typ", "JWT");
 
-        return Jwts.builder()
+        return jwtConfig.getTokenStartWith()+Jwts.builder()
                 .setHeader(header)    //header
                 .setIssuer("com.cs") //发行人
                 .setExpiration(validity) //到期时间

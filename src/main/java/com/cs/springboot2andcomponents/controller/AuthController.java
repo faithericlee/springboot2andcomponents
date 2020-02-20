@@ -6,25 +6,23 @@ import com.cs.springboot2andcomponents.aop.Log;
 import com.cs.springboot2andcomponents.components.TokenProvider;
 import com.cs.springboot2andcomponents.exception.BadRequestException;
 import com.cs.springboot2andcomponents.model.AuthUser;
+import com.cs.springboot2andcomponents.model.Result;
 import com.cs.springboot2andcomponents.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.parser.Token;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api(tags = "JWT示例")
+@Slf4j
+@Api(tags = "各类认证示例")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -42,13 +40,13 @@ public class AuthController {
     private RedisUtil redisUtil;
 
     @Log("用户登录-仅使用jwt")
-    @ApiOperation("用户登录-仅使用jwt")
+    @ApiOperation("JWT:用户登录-仅使用jwt-会返回token")
     @PostMapping(value = "/jwt")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request){
         // 密码解密
-        RSA rsa = new RSA(privateKey, null);
-        String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
-        if(!valid(authUser.getUsername(),password)){
+//        RSA rsa = new RSA(privateKey, null);
+//        String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
+        if(!valid(authUser.getUsername(),authUser.getPassword())){
             throw new BadRequestException("用户名和密码不匹配");
         }
         //redis+验证码
@@ -82,8 +80,31 @@ public class AuthController {
 //            //踢掉之前已经登录的token
 //            onlineUserService.checkLoginOnUser(authUser.getUsername(),token);
 //        }
-        return ResponseEntity.ok("");
+        Result result = Result.resultOk("");
+        Map<String,Object> authInfo = new HashMap<String,Object>(1){{
+            put("token", token);
+        }};
+        result.setData(authInfo);
+        return ResponseEntity.ok(result);
     }
+
+
+    @Log("验证jwt生成的token")
+    @ApiOperation("JWT:验证jwt生成的token")
+    @PostMapping(value = "/validatetoken")
+    public ResponseEntity<Object> validateToken(HttpServletRequest request){
+        String token = tokenProvider.getToken(request);
+        log.info("token : {}",token);
+        Result result;
+        if(!tokenProvider.validateToken(token)){
+            log.warn("token未通过验证");
+            result = Result.resultOk("验证未通过");
+        }else{
+            result = Result.resultOk("验证通过");
+        }
+        return ResponseEntity.ok(result);
+    }
+
 
     /**
      * 验证用户名和密码，直接返回true

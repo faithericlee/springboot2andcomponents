@@ -11,14 +11,19 @@ import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -32,7 +37,19 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApiDocket() {
+
+        ParameterBuilder tokenParam = new ParameterBuilder();
+        List<Parameter> params = new ArrayList<>();
+        tokenParam.name("Authorization").description("jwt token")
+                .modelRef(new ModelRef("string")).parameterType("header")
+                .required(false).build(); //header中的Authorization参数非必填，传空也可以
+        params.add(tokenParam.build());
+
         return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .build()
+                .globalOperationParameters(params)
                 .apiInfo(apiInfo());
     }
 
@@ -48,7 +65,7 @@ public class SwaggerConfig {
 }
 
 /**
- *  将Pageable转换展示在swagger中
+ * 将Pageable转换展示在swagger中
  */
 @Configuration
 class SwaggerDataConfig {
